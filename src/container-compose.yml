@@ -48,9 +48,9 @@ services:
       core:
         soft: -1
         hard: -1
-      nofile:
-        soft: 1024
-        hard: 100000
+      #nofile: Optional 
+      #  soft: 1024
+      #  hard: 100000
     mem_reservation: 500m # recommended minimal available memory
     stop_grace_period: 60s # grace period for container shutdown.
     devices:
@@ -59,7 +59,7 @@ services:
     tmpfs:
       - /var/volatile:rw,nodev,mode=1777
     security_opt:
-      - unmask="/proc/*" #Necessary for container in container support
+      - unmask=/proc/* #Necessary for container in container support
       - apparmor=vplcnextcontrol # use "vplcnextcontrol" profile for more security.
     volumes:
       - projects:/opt/plcnext/projects
@@ -73,7 +73,7 @@ services:
     logging:
       driver: journald
     x-podman.uidmaps: # User ID mapping. ContainerUser:HostUser:AmmountOfUIDsAvailable 
-        - "0:10000:265536"
+      - "0:10000:265536"
     x-podman.gidmaps: # Group ID mapping. ContainerGroup:HostGroup:AmmountOfGIDsAvailable
-        - "0:10000:265536"
+      - "0:10000:265536"
 
