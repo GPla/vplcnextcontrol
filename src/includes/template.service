@@ -8,14 +8,18 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStartPre=apparmor_parser -r "/etc/apparmor.d/containers/<APPARMOR_PROFILE>"
-ExecStart=podman start -a <CONTAINER_NAME>
-ExecStartPost=podman container inspect -f '{{range $key,$value := .NetworkSettings.Networks}}Network:"{{$key}}" IP-Address:"{{$value.IPAddress}}"\n{{end}}' "<CONTAINER_NAME>"
-ExecStop=podman stop <CONTAINER_NAME>
+ExecStartPre=-apparmor_parser -r "/etc/apparmor.d/containers/<APPARMOR_PROFILE>"
+ExecStart=+podman start -a <CONTAINER_NAME>
+ExecStartPost=+bash -c "until [ \"$(podman inspect -f '{{.State.Status}}' \"<CONTAINER_NAME>\" )\" = \"running\" ]; do sleep 1; done"
+ExecStartPost=+podman container inspect -f '{{range $key,$value := .NetworkSettings.Networks}}Network:"{{$key}}" IP-Address:"{{$value.IPAddress}}"\n{{end}}' "<CONTAINER_NAME>"
+
+ExecStop=+podman stop <CONTAINER_NAME>
 
 TimeoutStartSec=60
 TimeoutStopSec=65
 
+KillSignal=SIGTERM
+KillMode=process
 Restart=on-failure
 
 # Increase
