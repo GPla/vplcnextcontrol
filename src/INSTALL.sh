@@ -79,7 +79,7 @@ if [[ "$(whoami)" == "root" ]]; then
     if [ -n "$IMAGE" ]; then    
       if [ -f "$IMAGE" ]; then
         wrap_color "Loading OCI-Image" magenta
-        image_name=$(podman load -i $IMAGE | grep -oP '(?<=Loaded image: ).*')
+        image_name=$(podman load -i "$IMAGE" | grep -oP '(?<=Loaded image: ).*')
         wrap_good "SUCCESS" "Image name: $image_name"
         sed -i "s|\( *image: \)\".*\"|\1\"$image_name\"|" "${COMPOSE_FILE}"
         else
