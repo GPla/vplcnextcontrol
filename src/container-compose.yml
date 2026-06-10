@@ -2,11 +2,7 @@ name: "my" # Environment
 version: "3.9"
 
 volumes:
-  projects:
-  config:
-  data:
-  apps:
-  logs:
+  plcnext:
 
 networks:
   ## Profinet Network with layer 2 Support
@@ -62,11 +58,8 @@ services:
       - unmask=/proc/* #Necessary for container in container support
       - apparmor=vplcnextcontrol # use "vplcnextcontrol" profile for more security.
     volumes:
-      - projects:/opt/plcnext/projects
-      - config:/opt/plcnext/config
-      - data:/opt/plcnext/data
-      - apps:/opt/plcnext/apps
-      - logs:/opt/plcnext/logs
+      - plcnext:/opt/plcnext
+
     ports:
       - "8080:80"
       - "8443:443"
