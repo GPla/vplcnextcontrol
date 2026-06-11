@@ -66,7 +66,13 @@ services:
     logging:
       driver: journald
     x-podman.uidmaps: # User ID mapping. ContainerUser:HostUser:AmmountOfUIDsAvailable 
-      - "0:10000:265536"
+      - "0:10000:100000" # default user space
+      - "100000:110000:65536" # Admin id space
+      - "165536:175536:65536" # privileged id space
+      - "231072:241072:65536" # app id space
     x-podman.gidmaps: # Group ID mapping. ContainerGroup:HostGroup:AmmountOfGIDsAvailable
-      - "0:10000:265536"
+      - "0:10000:100000" # default user space
+      - "100000:110000:65536" # podman Admin id space
+      - "165536:175536:65536" # podman privileged id space
+      - "231072:241072:65536" # podman app id space
 
