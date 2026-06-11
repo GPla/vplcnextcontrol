@@ -76,3 +76,5 @@ services:
       - "165536:175536:65536" # podman privileged id space
       - "231072:241072:65536" # podman app id space
 
+  sysctls:
+      net.ipv4.ping_group_range: "0 1012" # allow all default Users to execute ping or send icmp. Increase range as necessary.
