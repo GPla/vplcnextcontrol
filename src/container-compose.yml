@@ -78,3 +78,5 @@ services:
 
   sysctls:
       net.ipv4.ping_group_range: "0 1012" # allow all default Users to execute ping or send icmp. Increase range as necessary.
+  
+  #x-podman.cpu-set: 1,3-10 # CPU setting for multi PLC setups. Do not assign same RT CPU multiple times.
