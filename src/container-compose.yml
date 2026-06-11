@@ -59,10 +59,10 @@ services:
       - apparmor=vplcnextcontrol # use "vplcnextcontrol" profile for more security.
     volumes:
       - plcnext:/opt/plcnext
-
-    ports:
-      - "8080:80"
-      - "8443:443"
+#    ports:
+#      - "8080:80"
+#      - "8443:443"
+#      - "41100:41100" # PLCnext Engineer Remoting.
     logging:
       driver: journald
     x-podman.uidmaps: # User ID mapping. ContainerUser:HostUser:AmmountOfUIDsAvailable 
