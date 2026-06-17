@@ -21,6 +21,15 @@ networks:
     external: true
     driver: bridge
 
+  ## Alternative compose managed network to be used with static IPs
+  #podman-alternative:
+  #  driver: bridge
+  #  external: false
+  #  internal: true # set true to avoid multiple GWs. only allow host communication.
+  #  ipam:
+  #   config:
+  #    - subnet: "10.89.0.1/16"
+
 services:
   vplcnext: #Service Name
     hostname: "vplcnextcontrol1000-x86-64"
@@ -28,10 +37,13 @@ services:
     networks:
       pn_vlan:
         ipv4_address: "192.168.1.10"     ##TODO: add VPLCnext Controls IP to use for PN
-        mac_address: "00:a0:de:ad:be:ef" ##TODO: Insert Unique MAC
-        x-podman.interface_name: eth0  #Mandatory but is only supported since podman compose >= 1.4.0
+        mac_address: "00:a0:de:ad:be:ef" ##TODO: Insert Unique MAC if running in Bridged mode.
+        x-podman.interface_name: eth0    # Do NOT change! PN is always assigned to eth0.
       podman:
-        x-podman.interface_name: eth1  #Mandatory but is only supported since podman compose >= 1.4.0
+        x-podman.interface_name: eth1    # Do NOT change!
+      #podman-alternative:
+      #  ipv4_address: "10.89.0.10"
+      #  x-podman.interface_name: eth1  # Do NOT change!
     cap_add:
       - "ALL" # Give container all capabilities and later restrict through apparmor
     systemd: always # Necessary for Virtual PLCnext Controls
