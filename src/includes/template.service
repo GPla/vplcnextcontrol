@@ -9,6 +9,15 @@ After=network.target
 [Service]
 Type=simple
 ExecStartPre=-apparmor_parser -r "/etc/apparmor.d/containers/<APPARMOR_PROFILE>"
+
+# Ensure codemeter is running
+ExecStartPre=/bin/sh -lc '\
+if systemctl list-unit-files codemeter.service >/dev/null 2>&1; then \
+systemctl start codemeter.service; \
+systemctl is-active --quiet codemeter.service || \
+systemctl --no-pager --wait start codemeter.service; \
+fi'
+
 ExecStart=+podman start -a <CONTAINER_NAME>
 ExecStartPost=+bash -c "until [ \"$(podman inspect -f '{{.State.Status}}' \"<CONTAINER_NAME>\" )\" = \"running\" ]; do sleep 1; done"
 ExecStartPost=+podman container inspect -f '{{range $key,$value := .NetworkSettings.Networks}}Network:"{{$key}}" IP-Address:"{{$value.IPAddress}}"\n{{end}}' "<CONTAINER_NAME>"
